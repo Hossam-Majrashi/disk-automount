@@ -6,7 +6,7 @@
 A professional Bash script that automatically detects all disks and partitions,
 mounts them, and saves them to `/etc/fstab` for persistence across reboots.
 
-***
+---
 
 ## ✨ المميزات | Features
 
@@ -19,7 +19,7 @@ mounts them, and saves them to `/etc/fstab` for persistence across reboots.
 - 📋 نسخة احتياطية تلقائية من `/etc/fstab` قبل أي تعديل
 - ⚠️ يضيف `nofail` لكل قسم لضمان الإقلاع الآمن
 
-***
+---
 
 - 🔍 Auto-detects all partitions via `lsblk` + `blkid`
 - 📦 Automatically installs required packages (ntfs-3g, exfatprogs...)
@@ -30,7 +30,7 @@ mounts them, and saves them to `/etc/fstab` for persistence across reboots.
 - 📋 Auto-backup of `/etc/fstab` before any modification
 - ⚠️ Adds `nofail` to every entry for safe boot guarantee
 
-***
+---
 
 ## 🚀 الاستخدام | Usage
 
@@ -39,7 +39,38 @@ chmod +x disk-automount.sh
 sudo bash disk-automount.sh
 ```
 
-***
+---
+
+## ⚠️ مهم — قبل الاستخدام (مستخدمو Windows) | Important — Before Use (Windows Users)
+
+إذا كنت تستخدم **Dual Boot** مع Windows، يجب **تعطيل Fast Startup و Hibernate** أولاً،
+وإلا ستظل أقراص NTFS للقراءة فقط ولا تستطيع الحذف أو الكتابة.
+
+If you use **Dual Boot** with Windows, you must **disable Fast Startup & Hibernate** first,
+otherwise NTFS drives will be read-only and you won't be able to write or delete files.
+
+### 🪟 تعطيل Fast Startup في Windows | Disable Fast Startup on Windows
+
+**الطريقة الأولى — لوحة التحكم:**
+
+1. افتح **Control Panel**
+2. ادخل على: **Hardware and Sound → Power Options**
+3. من اليسار اختر: **Choose what the power buttons do**
+4. اضغط: **Change settings that are currently unavailable**
+5. تحت قسم **Shutdown settings** شِل الصح من:
+   **Turn on fast startup (recommended)**
+6. اضغط **Save changes**
+
+**الطريقة الثانية — موجه الأوامر (كمسؤول):**
+
+```cmd
+powercfg /h off
+```
+
+> 💡 بعد التعطيل، نفّذ **Shutdown كامل** (وليس Restart) ثم أقلع للينكس.
+> Full Shutdown is required after disabling — do not use Restart.
+
+---
 
 ## 🖥️ التوزيعات المدعومة | Supported Distros
 
@@ -50,7 +81,7 @@ sudo bash disk-automount.sh
 | Fedora / RHEL | Fedora / RHEL | dnf | dnf |
 | openSUSE | openSUSE | zypper | zypper |
 
-***
+---
 
 ## ⚡ بعد التشغيل | After Running
 
@@ -60,30 +91,30 @@ sudo mount -a
 
 # عرض الأقراص | List disks
 lsblk -o NAME,MOUNTPOINT,FSTYPE,LABEL
+
+# تأكد أن الأقراص مركّبة بصلاحية كتابة
+mount | grep ntfs
 ```
 
-***
+---
+
+## 🛠️ إذا بقي NTFS للقراءة فقط | If NTFS is Still Read-Only
+
+```bash
+# فك التركيب أولاً
+sudo umount /dev/sdXn
+
+# إصلاح dirty bit
+sudo ntfsfix /dev/sdXn
+
+# إعادة التركيب
+sudo mount -a
+```
+
+---
 
 ## 📄 الترخيص | License
 
 حقوق النشر محفوظة © 2026 — مُرخَّص بموجب رخصة MIT
 
 Copyright © 2026 — Licensed under the MIT License
-
-```
-MIT License
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-```
